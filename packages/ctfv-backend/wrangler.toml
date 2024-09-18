@@ -1,0 +1,26 @@
+name = "ctfv-backend"
+compatibility_date = "2024-09-09"
+compatibility_flags = [ "nodejs_compat" ]
+
+# [vars]
+# MY_VAR = "my-variable"
+
+# [[kv_namespaces]]
+# binding = "MY_KV_NAMESPACE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [[r2_buckets]]
+# binding = "MY_BUCKET"
+# bucket_name = "my-bucket"
+
+[[d1_databases]]
+binding = "DATABASE"
+database_name = "ctfV-db"
+database_id = "ad1f715a-f293-4692-a216-0f202d5b3cef"
+migrations_dir = "drizzle"
+
+# [ai]
+# binding = "AI"
+
+[observability]
+enabled = true

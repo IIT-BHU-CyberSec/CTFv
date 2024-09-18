@@ -1,0 +1,7 @@
+{
+  "name": "ctfv",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
