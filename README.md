@@ -9,8 +9,9 @@ The repository is in a mono-repo format. The packages directory contains the two
 ### Backend
 
 - Then in the backend directory, run `bun run migration:local` to setup the database.
+- In the backend directory, add the .dev.vars file (copy it from the .dev.vars.example).
 - Then run `bun run start` in the backend directory to start the backend server.
 
 ### Frontend
 
-- In the frontend directory, run `bun run start` to start the frontend server.
+- In the frontend directory, run `bun run dev` to start the frontend server.
