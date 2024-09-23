@@ -14,7 +14,7 @@ import {
 import { Input } from "../components/ui/input";
 
 export const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      await login(emailOrUsername, password);
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
@@ -46,14 +46,14 @@ export const Login: React.FC = () => {
               htmlFor="email"
               className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
-              Email
+              Email or username
             </label>
             <Input
-              id="email"
-              type="email"
-              value={email}
+              id="emailOrUsername"
+              type="text"
+              value={emailOrUsername}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="Enter your email or username"
               required
               className="w-full"
             />

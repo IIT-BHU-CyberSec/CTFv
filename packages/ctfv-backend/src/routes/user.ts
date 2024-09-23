@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { Hono } from "hono";
 import { JwtVariables, sign } from "hono/jwt";
 
@@ -71,10 +71,13 @@ userRouter.post("/auth/register", async (c) => {
 
 userRouter.post("/auth/login", async (c) => {
   const db = getDB(c);
-  const { email, password } = await c.req.json();
+  const { password, emailOrUsername } = await c.req.json();
 
   const user = await db.query.users.findFirst({
-    where: eq(schema.users.email, email),
+    where: or(
+      eq(schema.users.email, emailOrUsername),
+      eq(schema.users.username, emailOrUsername)
+    )
   });
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
