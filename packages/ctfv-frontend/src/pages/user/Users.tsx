@@ -58,23 +58,12 @@ export const Users: React.FC = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user, i) => (
-            <TableRow
-              key={user.username}
-              className={i % 2 ? "" : "bg-zinc-50 dark:bg-zinc-800"}
-            >
-              <TableCell className="text-blue-600 hover:cursor-pointer dark:text-blue-400">
-                {user.username}
-              </TableCell>
-              <TableCell className="dark:text-zinc-300">
-                {user.website}
-              </TableCell>
-              <TableCell className="dark:text-zinc-300">
-                {user.affiliation}
-              </TableCell>
-              <TableCell className="dark:text-zinc-300">
-                {user.country}
-              </TableCell>
+          {users.map((user) => (
+            <TableRow key={user.username}>
+              <TableCell>{user.username}</TableCell>
+              <TableCell>{user.website}</TableCell>
+              <TableCell>{user.affiliation}</TableCell>
+              <TableCell>{user.country}</TableCell>
             </TableRow>
           ))}
         </TableBody>
