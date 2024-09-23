@@ -31,6 +31,7 @@ export const challenges = sqliteTable("challenges", {
   }).notNull(),
   author: text("author").notNull(),
   flag: text("flag").notNull(),
+  total_attempts: integer("total_attempts").notNull().default(0),
 });
 
 export const submissions = sqliteTable("submissions", {
@@ -48,4 +49,5 @@ export const submissions = sqliteTable("submissions", {
     .notNull()
     .default(sql`(current_timestamp)`),
   isCorrect: integer("isCorrect", { mode: "boolean" }).notNull(),
+  attemptCount: integer("attemptCount").notNull().default(0),
 });

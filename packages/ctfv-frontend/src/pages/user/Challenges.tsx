@@ -39,9 +39,7 @@ type CategoryChallenges = {
 
 export const Challenges: React.FC = () => {
   const [categories, setCategories] = useState<CategoryChallenges[]>([]);
-  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
-    null,
-  );
+  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
   const [flagInput, setFlagInput] = useState("");
   const [submissionStatus, setSubmissionStatus] = useState<string | null>(null);
   const { user } = useAuth(); // Get the current user (including isAdmin)
@@ -49,15 +47,12 @@ export const Challenges: React.FC = () => {
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8787/api/challenges/read",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
+        const response = await fetch("http://localhost:8787/api/challenges/read", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        );
+        });
         if (response.ok) {
           const data = await response.json();
           setCategories(data.challenges);
@@ -110,6 +105,8 @@ export const Challenges: React.FC = () => {
               ),
             })),
           );
+        } else if (data.submission.error === "max_limit_reached") {
+          setSubmissionStatus("max_limit");
         } else {
           setSubmissionStatus("incorrect");
         }
@@ -139,9 +136,7 @@ export const Challenges: React.FC = () => {
                 <DialogTrigger asChild>
                   <Card
                     className={`cursor-pointer border-none text-center shadow-custom transition-shadow duration-300 hover:shadow-hover-custom dark:hover:shadow-dark-hover ${
-                      challenge.solved
-                        ? "bg-green-400 dark:bg-green-600"
-                        : "dark:bg-zinc-700"
+                      challenge.solved ? "bg-green-400 dark:bg-green-600" : "dark:bg-zinc-700"
                     }`}
                     onClick={() => openDialog(challenge)}
                   >
@@ -166,8 +161,7 @@ export const Challenges: React.FC = () => {
                         <strong>Author:</strong> {selectedChallenge?.author}
                       </p>
                       <p>
-                        <strong>Challenge Link:</strong>{" "}
-                        {selectedChallenge?.url}
+                        <strong>Challenge Link:</strong> {selectedChallenge?.url}
                       </p>
                       {user?.isAdmin && (
                         <>
@@ -176,9 +170,7 @@ export const Challenges: React.FC = () => {
                           </p>
                           <div className="my-4">
                             <Button asChild>
-                              <Link
-                                to={`/admin/challenges/edit?id=${selectedChallenge?.id}`}
-                              >
+                              <Link to={`/admin/challenges/edit?id=${selectedChallenge?.id}`}>
                                 Edit Challenge
                               </Link>
                             </Button>
@@ -202,22 +194,24 @@ export const Challenges: React.FC = () => {
                           variant={
                             submissionStatus === "correct"
                               ? "default"
+                              : submissionStatus === "max_limit"
+                              ? "destructive"
                               : "destructive"
                           }
                         >
                           <AlertTitle className="font-bold">
                             {submissionStatus === "correct"
                               ? "Correct!"
-                              : submissionStatus === "incorrect"
-                                ? "Incorrect!"
-                                : "Error!"}
+                              : submissionStatus === "max_limit"
+                              ? "Maximum Limit Reached!"
+                              : "Error!"}
                           </AlertTitle>
                           <AlertDescription>
                             {submissionStatus === "correct"
                               ? "You have successfully solved the challenge."
-                              : submissionStatus === "incorrect"
-                                ? "The flag is incorrect. Please try again."
-                                : "An error occurred while submitting the flag."}
+                              : submissionStatus === "max_limit"
+                              ? "You have reached the maximum submission limit for this challenge."
+                              : "An error occurred while submitting the flag."}
                           </AlertDescription>
                         </Alert>
                       )}

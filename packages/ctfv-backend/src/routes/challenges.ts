@@ -183,7 +183,26 @@ challengesRouter.post("/submit/:id", authMiddleware, async (c) => {
       return c.json({ error: "Challenge not found" }, 404);
     }
 
-    const hasSubmitted = await db
+    const submissionCountResult = await db
+      .select({
+        attemptCount: sql`COUNT(${schema.submissions.id})`.as("attemptCount"),
+      })
+      .from(schema.submissions)
+      .where(
+        and(
+          eq(schema.submissions.userId, userId),
+          eq(schema.submissions.challengeId, challengeId),
+        ),
+      )
+      .get();
+
+    const attemptsMade = (submissionCountResult as { attemptCount: number })?.attemptCount ?? 0;
+
+    if (attemptsMade >= challenge.total_attempts) {
+      return c.json({ error: "Maximum attempts reached" }, 403);
+    }
+
+    const hasSubmittedCorrectly = await db
       .select()
       .from(schema.submissions)
       .where(
@@ -195,8 +214,8 @@ challengesRouter.post("/submit/:id", authMiddleware, async (c) => {
       )
       .get();
 
-    if (hasSubmitted) {
-      return c.json({ error: "Already submitted" }, 400);
+    if (hasSubmittedCorrectly) {
+      return c.json({ error: "Already submitted correct answer" }, 400);
     }
 
     const isCorrect = challenge.flag === flag;
