@@ -12,6 +12,11 @@ type Variables = JwtVariables;
 
 const userRouter = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
+function isValidEmail(email: string) {
+  const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return pattern.test(email);
+}
+
 userRouter.post("/auth/register", async (c) => {
   try {
     const db = getDB(c);
@@ -21,9 +26,10 @@ userRouter.post("/auth/register", async (c) => {
     if (typeof isAdmin !== "boolean") {
       return c.json({ error: "isAdmin must be boolean" }, 400);
     }
+    const correctedEmail = email.toLowerCase();
 
     const existingUser = await db.query.users.findFirst({
-      where: eq(schema.users.email, email),
+      where: eq(schema.users.email, correctedEmail),
     });
 
     if (existingUser) {
@@ -35,7 +41,7 @@ userRouter.post("/auth/register", async (c) => {
     const newUser = await db
       .insert(schema.users)
       .values({
-        email,
+        email:correctedEmail,
         password: hashedPassword,
         username,
         isAdmin,
@@ -73,31 +79,55 @@ userRouter.post("/auth/login", async (c) => {
   const db = getDB(c);
   const { password, emailOrUsername } = await c.req.json();
 
-  const user = await db.query.users.findFirst({
-    where: or(
-      eq(schema.users.email, emailOrUsername),
-      eq(schema.users.username, emailOrUsername)
-    )
-  });
-
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return c.json({ error: "Invalid credentials" }, 401);
+  if(isValidEmail(emailOrUsername)){
+    const correctedEmail = emailOrUsername.toLowerCase();
+    const user = await db.query.users.findFirst({
+      where: eq(schema.users.email, correctedEmail),
+    });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return c.json({ error: "Invalid credentials" }, 401);
+    }
+  
+    const token = await sign(
+      { userId: user.id, isAdmin: user.isAdmin },
+      c.env.AUTH_SECRET,
+    );
+  
+    return c.json({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        isAdmin: user.isAdmin,
+      },
+    });
+  }else{
+    const user = await db.query.users.findFirst({
+      where: eq(schema.users.username, emailOrUsername)
+    });
+  
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return c.json({ error: "Invalid credentials" }, 401);
+    }
+  
+    const token = await sign(
+      { userId: user.id, isAdmin: user.isAdmin },
+      c.env.AUTH_SECRET,
+    );
+  
+    return c.json({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        isAdmin: user.isAdmin,
+      },
+    });
   }
 
-  const token = await sign(
-    { userId: user.id, isAdmin: user.isAdmin },
-    c.env.AUTH_SECRET,
-  );
-
-  return c.json({
-    token,
-    user: {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-      isAdmin: user.isAdmin,
-    },
-  });
+  
 });
 
 userRouter.get("/", async (c) => {

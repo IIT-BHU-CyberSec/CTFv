@@ -16,6 +16,6 @@ The repository is in a mono-repo format. The packages directory contains the two
 
 - This adds 1 admin account 19 non admin accounts and 35 challenges, 5 of each mentioned type
 
-- You can then log into admin account using the credentials `ADMIN@iitbhu.ac.in` and the password for ALL accounts is `cops`
+- You can then log into admin account using the credentials `admin@iitbhu.ac.in` and the password for ALL accounts is `cops`
 
 - For any further info you can check `./packages/ctfv-backend/src/db/populate.sql`

@@ -14,6 +14,12 @@ import {
 import { Input } from "../components/ui/input";
 
 export const Login: React.FC = () => {
+  
+  function isValidEmail(email: string) {
+    const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return pattern.test(email);
+  }
+
   const [emailOrUsername, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
@@ -22,6 +28,9 @@ export const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      if(isValidEmail(emailOrUsername)){
+        setEmail(emailOrUsername.toLowerCase())
+      }
       await login(emailOrUsername, password);
       navigate("/");
     } catch (error) {

@@ -1,7 +1,7 @@
 -- Populating users table with random unique ids and corresponding dummyX usernames
 INSERT INTO user (id, name, email, password, rollNo, instituteName, image, website, affiliation, country, isAdmin)
 VALUES
-('9c06fd6a-8cf4-4a09-9c89-c26032d01678', 'ADMIN', 'ADMIN@iitbhu.ac.in', '$2b$10$Plp.hOT99/0RkMh8ACgh4etoDF/fXk5gvp/AuHtIS5Dzx0qlt9zsm', '24001', 'IIT Delhi', 'dummy image link 1', 'dummy website link 1', 'some random 1st affilation', 'India', 1),
+('9c06fd6a-8cf4-4a09-9c89-c26032d01678', 'ADMIN', 'admin@iitbhu.ac.in', '$2b$10$Plp.hOT99/0RkMh8ACgh4etoDF/fXk5gvp/AuHtIS5Dzx0qlt9zsm', '24001', 'IIT Delhi', 'dummy image link 1', 'dummy website link 1', 'some random 1st affilation', 'India', 1),
 ('cdb68275-ef25-414a-96e7-fc24009e7403', 'dummy2', 'dummyemail2@iitbhu.ac.in', '$2b$10$Plp.hOT99/0RkMh8ACgh4etoDF/fXk5gvp/AuHtIS5Dzx0qlt9zsm', '24002', 'IIT Kanpur', 'dummy image link 2', 'dummy website link 2', 'some random 2nd affilation', 'USA', 0),
 ('2ae81051-6424-492c-a8f7-b90fdf701f95', 'dummy3', 'dummyemail3@iitbhu.ac.in', '$2b$10$Plp.hOT99/0RkMh8ACgh4etoDF/fXk5gvp/AuHtIS5Dzx0qlt9zsm', '24003', 'IIT BHU', 'dummy image link 3', 'dummy website link 3', 'some random 3rd affilation', 'France', 0),
 ('37e7bf00-4075-4868-8594-d330d139b85f', 'dummy4', 'dummyemail4@iitbhu.ac.in', '$2b$10$Plp.hOT99/0RkMh8ACgh4etoDF/fXk5gvp/AuHtIS5Dzx0qlt9zsm', '24004', 'IIT Bombay', 'dummy image link 4', 'dummy website link 4', 'some random 4th affilation', 'Italy', 0),
